@@ -28,6 +28,7 @@ import java.util.Objects;
 import static com.ecom.config.Contant.MAX_AGE_COOKIE;
 
 @RestController
+@CrossOrigin("*")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -122,7 +123,7 @@ public class UserController {
 
     @PutMapping("/api/update-profile")
     public ResponseEntity<Object> updateProfile(@Valid @RequestBody UpdateProfileRequest profileReq) {
-        User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
+        User user = userService.findByEmail(profileReq.getEmail());
 
         user = userService.updateProfile(user, profileReq);
         UserDetails userDetails = new CustomUserDetails(user);

@@ -14,8 +14,9 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateProfileRequest {
+    private String email;
 
-    @Pattern(regexp="(09|03|07|08|05)+([0-9]{8})\\b", message = "Điện thoại không hợp lệ")
+    @Pattern(regexp = "(09|03|07|08|05)+([0-9]{8})\\b", message = "Điện thoại không hợp lệ")
     private String phone;
 
     @NotBlank(message = "Họ tên trống")

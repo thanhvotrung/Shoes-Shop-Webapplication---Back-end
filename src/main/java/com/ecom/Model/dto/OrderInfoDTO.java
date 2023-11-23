@@ -5,30 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class OrderInfoDTO {
-    private long id;
-
-    private long totalPrice;
-
-    private int sizeVn;
-
-    private double sizeUs;
-
-    private double sizeCm;
-
-    private String productName;
-
+    private Long id;
+    private Long totalPrice;
     private String productImg;
+    private String name;
+    private int size;
+    private int quantity;
+    private Long price;
+    private Long count;
 
-    public OrderInfoDTO(long id, long totalPrice, int sizeVn, String productName, String productImg) {
-        this.id = id;
-        this.totalPrice = totalPrice;
-        this.sizeVn = sizeVn;
-        this.productName = productName;
-        this.productImg = productImg;
-    }
 }

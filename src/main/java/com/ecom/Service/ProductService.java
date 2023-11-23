@@ -15,7 +15,8 @@ import com.ecom.Model.request.CreateProductRequest;
 import com.ecom.Model.request.CreateSizeCountRequest;
 import com.ecom.Model.request.FilterProductRequest;
 import com.ecom.Model.request.UpdateFeedBackRequest;
-import com.ecom.Repository.OrderRepository;
+//import com.ecom.Repository.OrderRepository;
+import com.ecom.Repository.OrderDetailsRepository;
 import com.ecom.Repository.ProductRepository;
 import com.ecom.Repository.ProductSizeRepository;
 import com.ecom.Repository.PromotionRepository;
@@ -51,7 +52,7 @@ public class ProductService {
     private PromotionRepository promotionRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderDetailsRepository orderDetailsRepository;
 
 
     public Page<Product> adminGetListProduct(String id, String name, String category, String brand, Integer page) {
@@ -153,7 +154,7 @@ public class ProductService {
         }
 
         // If have order, can't delete
-        int countOrder = orderRepository.countByProductId(id);
+        int countOrder = orderDetailsRepository.countByProductIds(id);
         if (countOrder > 0) {
             throw new BadRequestException("Sản phẩm đã được đặt hàng không thể xóa");
         }

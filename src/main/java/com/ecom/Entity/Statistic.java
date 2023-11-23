@@ -54,7 +54,7 @@ public class Statistic {
     private int quantity;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private Order order;
+    private Orders orders;
     @Column(name = "created_at")
     private Timestamp createdAt;
 }

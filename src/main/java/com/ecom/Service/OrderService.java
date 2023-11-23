@@ -4,8 +4,6 @@ import com.ecom.Entity.*;
 import com.ecom.Exception.BadRequestException;
 import com.ecom.Exception.InternalServerException;
 import com.ecom.Exception.NotFoundException;
-import com.ecom.Model.dto.OrderDetailDTO;
-import com.ecom.Model.dto.OrderInfoDTO;
 import com.ecom.Model.request.CreateOrderRequest;
 import com.ecom.Model.request.UpdateDetailOrder;
 import com.ecom.Model.request.UpdateStatusOrderRequest;
@@ -21,7 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Optional;
 
 import static com.ecom.config.Contant.*;
@@ -196,7 +193,7 @@ public class OrderService {
                 //Trừ đi một sản phẩm và cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
                 productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
                 productRepository.plusOneProductTotalSold(order.getProduct().getId());
-                statistic(order.getTotalPrice(), order.getQuantity(), order);
+//                statistic(order.getTotalPrice(), order.getQuantity(), order);
             } else if (updateStatusOrderRequest.getStatus() != CANCELED_STATUS) {
                 throw new BadRequestException("Không thế chuyển sang trạng thái này");
             }
@@ -206,7 +203,7 @@ public class OrderService {
             if (updateStatusOrderRequest.getStatus() == COMPLETED_STATUS) {
                 //Cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
                 productRepository.plusOneProductTotalSold(order.getProduct().getId());
-                statistic(order.getTotalPrice(), order.getQuantity(), order);
+//                statistic(order.getTotalPrice(), order.getQuantity(), order);
                 //Đơn hàng ở trạng thái đã hủy
             } else if (updateStatusOrderRequest.getStatus() == RETURNED_STATUS) {
                 //Cộng lại một sản phẩm đã bị trừ
@@ -225,7 +222,7 @@ public class OrderService {
                 //Cộng một sản phẩm đã bị trừ và trừ đi một sản phẩm đã bán và trừ số tiền
                 productSizeRepository.plusOneProductBySize(order.getProduct().getId(), order.getSize());
                 productRepository.minusOneProductTotalSold(order.getProduct().getId());
-                updateStatistic(order.getTotalPrice(), order.getQuantity(), order);
+//                updateStatistic(order.getTotalPrice(), order.getQuantity(), order);
             } else if (updateStatusOrderRequest.getStatus() != COMPLETED_STATUS) {
                 throw new BadRequestException("Không thế chuyển sang trạng thái này");
             }
@@ -248,47 +245,47 @@ public class OrderService {
         }
     }
 
-    public List<OrderInfoDTO> getListOrderOfPersonByStatus(int status, long userId) {
-        List<OrderInfoDTO> list = orderRepository.getListOrderOfPersonByStatus(status, userId);
+//    public List<OrderInfoDTO> getListOrderOfPersonByStatus(int status, long userId) {
+//        List<OrderInfoDTO> list = orderRepository.getListOrderOfPersonByStatus(status, userId);
+//
+//        for (OrderInfoDTO dto : list) {
+//            for (int i = 0; i < SIZE_VN.size(); i++) {
+//                if (SIZE_VN.get(i) == dto.getSizeVn()) {
+//                    dto.setSizeUs(SIZE_US[i]);
+//                    dto.setSizeCm(SIZE_CM[i]);
+//                }
+//            }
+//        }
+//        return list;
+//    }
 
-        for (OrderInfoDTO dto : list) {
-            for (int i = 0; i < SIZE_VN.size(); i++) {
-                if (SIZE_VN.get(i) == dto.getSizeVn()) {
-                    dto.setSizeUs(SIZE_US[i]);
-                    dto.setSizeCm(SIZE_CM[i]);
-                }
-            }
-        }
-        return list;
-    }
-
-    public OrderDetailDTO userGetDetailById(long id, long userId) {
-        OrderDetailDTO order = orderRepository.userGetDetailById(id, userId);
-        if (order == null) {
-            return null;
-        }
-
-        if (order.getStatus() == ORDER_STATUS) {
-            order.setStatusText("Chờ lấy hàng");
-        } else if (order.getStatus() == DELIVERY_STATUS) {
-            order.setStatusText("Đang giao hàng");
-        } else if (order.getStatus() == COMPLETED_STATUS) {
-            order.setStatusText("Đã giao hàng");
-        } else if (order.getStatus() == CANCELED_STATUS) {
-            order.setStatusText("Đơn hàng đã trả lại");
-        } else if (order.getStatus() == RETURNED_STATUS) {
-            order.setStatusText("Đơn hàng đã hủy");
-        }
-
-        for (int i = 0; i < SIZE_VN.size(); i++) {
-            if (SIZE_VN.get(i) == order.getSizeVn()) {
-                order.setSizeUs(SIZE_US[i]);
-                order.setSizeCm(SIZE_CM[i]);
-            }
-        }
-
-        return order;
-    }
+//    public OrderDetailDTO userGetDetailById(long id, long userId) {
+//        OrderDetailDTO order = orderRepository.userGetDetailById(id, userId);
+//        if (order == null) {
+//            return null;
+//        }
+//
+//        if (order.getStatus() == ORDER_STATUS) {
+//            order.setStatusText("Chờ lấy hàng");
+//        } else if (order.getStatus() == DELIVERY_STATUS) {
+//            order.setStatusText("Đang giao hàng");
+//        } else if (order.getStatus() == COMPLETED_STATUS) {
+//            order.setStatusText("Đã giao hàng");
+//        } else if (order.getStatus() == CANCELED_STATUS) {
+//            order.setStatusText("Đơn hàng đã trả lại");
+//        } else if (order.getStatus() == RETURNED_STATUS) {
+//            order.setStatusText("Đơn hàng đã hủy");
+//        }
+//
+//        for (int i = 0; i < SIZE_VN.size(); i++) {
+//            if (SIZE_VN.get(i) == order.getSizeVn()) {
+//                order.setSizeUs(SIZE_US[i]);
+//                order.setSizeCm(SIZE_CM[i]);
+//            }
+//        }
+//
+//        return order;
+//    }
 
     public void userCancelOrder(long id, long userId) {
         Optional<Order> rs = orderRepository.findById(id);
@@ -311,33 +308,33 @@ public class OrderService {
         return orderRepository.count();
     }
 
-    public void statistic(long amount, int quantity, Order order) {
-        Statistic statistic = statisticRepository.findByCreatedAT();
-        if (statistic != null){
-            statistic.setOrder(order);
-            statistic.setSales(statistic.getSales() + amount);
-            statistic.setQuantity(statistic.getQuantity() + quantity);
-            statistic.setProfit(statistic.getSales() - (statistic.getQuantity() * order.getProduct().getPrice()));
-            statisticRepository.save(statistic);
-        }else {
-            Statistic statistic1 = new Statistic();
-            statistic1.setOrder(order);
-            statistic1.setSales(amount);
-            statistic1.setQuantity(quantity);
-            statistic1.setProfit(amount - (quantity * order.getProduct().getPrice()));
-            statistic1.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            statisticRepository.save(statistic1);
-        }
-    }
-
-    public void updateStatistic(long amount, int quantity, Order order) {
-        Statistic statistic = statisticRepository.findByCreatedAT();
-        if (statistic != null) {
-            statistic.setOrder(order);
-            statistic.setSales(statistic.getSales() - amount);
-            statistic.setQuantity(statistic.getQuantity() - quantity);
-            statistic.setProfit(statistic.getSales() - (statistic.getQuantity() * order.getProduct().getPrice()));
-            statisticRepository.save(statistic);
-        }
-    }
+//    public void statistic(long amount, int quantity, Order order) {
+//        Statistic statistic = statisticRepository.findByCreatedAT();
+//        if (statistic != null){
+//            statistic.setOrder(order);
+//            statistic.setSales(statistic.getSales() + amount);
+//            statistic.setQuantity(statistic.getQuantity() + quantity);
+//            statistic.setProfit(statistic.getSales() - (statistic.getQuantity() * order.getProduct().getPrice()));
+//            statisticRepository.save(statistic);
+//        }else {
+//            Statistic statistic1 = new Statistic();
+//            statistic1.setOrder(order);
+//            statistic1.setSales(amount);
+//            statistic1.setQuantity(quantity);
+//            statistic1.setProfit(amount - (quantity * order.getProduct().getPrice()));
+//            statistic1.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+//            statisticRepository.save(statistic1);
+//        }
+//    }
+//
+//    public void updateStatistic(long amount, int quantity, Order order) {
+//        Statistic statistic = statisticRepository.findByCreatedAT();
+//        if (statistic != null) {
+//            statistic.setOrder(order);
+//            statistic.setSales(statistic.getSales() - amount);
+//            statistic.setQuantity(statistic.getQuantity() - quantity);
+//            statistic.setProfit(statistic.getSales() - (statistic.getQuantity() * order.getProduct().getPrice()));
+//            statisticRepository.save(statistic);
+//        }
+//    }
 }

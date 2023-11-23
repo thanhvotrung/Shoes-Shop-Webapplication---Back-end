@@ -73,6 +73,12 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     @Query(nativeQuery = true, value = "Update product set total_sold = total_sold + 1 where id = ?1")
     void plusOneProductTotalSold(String productId);
 
+    //Cộng một sản phẩm đã bán
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true, value = "Update product set total_sold = total_sold + ?2 where id = ?1")
+    void plusOneProductTotalSold2(String productId, int quantity);
+
     //Tìm kiến sản phẩm theo size
     @Query(nativeQuery = true, name = "searchProductBySize")
     List<ProductInfoDTO> searchProductBySize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, List<Integer> sizes, int limit, int offset);

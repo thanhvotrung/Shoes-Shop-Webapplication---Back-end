@@ -37,7 +37,7 @@ public class Promotion {
     @Column(name = "expired_at")
     private Timestamp expiredAt;
 
-    public Promotion(Order.UsedPromotion promotion) {
+    public Promotion(Orders.UsedPromotion promotion) {
         this.couponCode = promotion.getCouponCode();
         this.discountType = promotion.getDiscountType();
         this.discountValue = promotion.getDiscountValue();
