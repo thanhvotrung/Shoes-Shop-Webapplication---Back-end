@@ -28,11 +28,11 @@ import java.util.List;
 @NamedNativeQuery(
         name = "getProductOrderBrands",
         resultSetMapping = "chartBrandDTO",
-        query = "select b.name as label, count(o.quantity) as value  from brand b " +
+        query = "select b.name as label, sum(od.quantity) as value from brand b " +
                 "inner join product p on p.brand_id = b.id " +
-                "inner join orders o on p.id = o.product_id " +
-                "where o.status = 3 " +
-                "group by b.id"
+                "inner join order_details od on p.id = od.product_id " +
+                "inner join orderss o on od.orders_id = o.id " +
+                "where o.status = 3 group by b.id"
 )
 @AllArgsConstructor
 @NoArgsConstructor

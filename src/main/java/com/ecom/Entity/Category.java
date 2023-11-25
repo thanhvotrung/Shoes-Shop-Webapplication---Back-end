@@ -25,12 +25,12 @@ import java.sql.Timestamp;
 @NamedNativeQuery(
         name = "getProductOrderCategories",
         resultSetMapping = "chartCategoryDTO",
-        query = "select  c.name as label, count(o.quantity) as value from category c " +
+        query = "select  c.name as label, sum(od.quantity) as value from category c " +
                 "inner join product_category pc on pc.category_id = c.id " +
                 "inner join product p on p.id = pc.product_id " +
-                "inner join orders o on o.product_id = p.id " +
-                "where o.status = 3 " +
-                "group by c.id "
+                "inner join order_details od on od.product_id = p.id " +
+                "inner join orderss o on o.id = od.orders_id " +
+                "where o.status = 3 group by c.id "
 )
 @AllArgsConstructor
 @NoArgsConstructor

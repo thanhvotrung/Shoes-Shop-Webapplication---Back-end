@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @RestController
@@ -38,6 +39,9 @@ public class CartController {
         Promotion promotion = promotionService.checkPromotion(code);
         if (promotion == null) {
             throw new BadRequestException("Mã code không hợp lệ");
+        }
+        if (promotion.getExpiredAt().compareTo(new Timestamp(System.currentTimeMillis())) < 0){
+            throw new BadRequestException("Mã code đã hết hạn");
         }
         CheckPromotion checkPromotion = new CheckPromotion();
         checkPromotion.setDiscountType(promotion.getDiscountType());

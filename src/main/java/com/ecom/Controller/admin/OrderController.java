@@ -68,10 +68,8 @@ public class OrderController {
     }
 
     @GetMapping("/api/test")
-    public ResponseEntity<Object> test(@CookieValue(name = "JWT_TOKEN", defaultValue = "DefaultCookie") String myCookie) {
-        System.out.println(myCookie);
-        User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
-        System.out.println(user.getFullName());
+    public ResponseEntity<Object> test() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok("Cập nhật trạng thái thành công");
     }
 }
