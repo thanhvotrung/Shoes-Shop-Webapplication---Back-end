@@ -97,6 +97,25 @@ public class DashboardController {
         return ResponseEntity.ok(statisticDTOS);
     }
 
+    @GetMapping("/api/admin/statistics/total-sales")
+    public ResponseEntity<Long> getTotalSales(){
+        Long sum = statisticRepository.getTotalSales();
+        return ResponseEntity.ok(sum);
+    }
+
+    @GetMapping("/api/admin/statistics/total-profit")
+    public ResponseEntity<Long> getTotalProfit(){
+        Long sum = statisticRepository.getTotalProfit();
+        return ResponseEntity.ok(sum);
+    }
+
+    @GetMapping("/api/admin/statistics/total-quantity")
+    public ResponseEntity<Long> getTotalQuantity(){
+        Long sum = statisticRepository.getTotalQuantity();
+        return ResponseEntity.ok(sum);
+    }
+
+
     @GetMapping("/api/admin/product-order-categories")
     public ResponseEntity<Object> getListProductOrderCategories(){
         List<ChartDTO> chartDTOS = categoryRepository.getListProductOrderCategories();

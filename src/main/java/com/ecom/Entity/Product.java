@@ -159,11 +159,13 @@ import java.util.List;
 @NamedNativeQuery(
         name = "getProductOrders",
         resultSetMapping = "chartProductDTO",
-        query = "select p.name as label, sum(o.quantity) as value from product p " +
-                "inner join orders o on p.id = o.product_id " +
+
+        query = "select p.name as label, sum(od.quantity) as value from product p " +
+                "inner join order_details od on p.id = od.product_id " +
+                "inner join orderss o on od.orders_id = o.id " +
                 "where o.status = 3 and date_format(o.created_at,'%m') = ?1 " +
                 "and date_format(o.created_at,'%Y') = ?2 " +
-                "group by p.id order by sum(o.quantity) desc "
+                "group by p.id order by sum(od.quantity) desc"
 )
 @AllArgsConstructor
 @NoArgsConstructor

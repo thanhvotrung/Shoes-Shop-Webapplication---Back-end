@@ -72,6 +72,9 @@ public class OrderController {
         System.out.println(myCookie);
         User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         System.out.println(user.getFullName());
+
+
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok("Cập nhật trạng thái thành công");
     }
 }
