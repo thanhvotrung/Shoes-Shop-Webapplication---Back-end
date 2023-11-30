@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Getter
 public class UpdateDetailOrder {
+    private String email;
+
     @NotBlank(message = "Sản phẩm trống")
     @JsonProperty("product_id")
     private String productId;

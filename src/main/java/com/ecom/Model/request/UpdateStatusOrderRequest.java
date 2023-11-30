@@ -14,6 +14,8 @@ import javax.validation.constraints.Pattern;
 @Setter
 @Getter
 public class UpdateStatusOrderRequest {
+    private String email;
+
     @NotBlank(message = "Họ tên trống")
     @JsonProperty("receiver_name")
     private String receiverName;

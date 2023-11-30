@@ -6,6 +6,7 @@ import com.ecom.Model.dto.ProductInfoDTO;
 import com.ecom.Model.dto.ShortProductInfoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -81,7 +82,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     //Tìm kiến sản phẩm theo size
     @Query(nativeQuery = true, name = "searchProductBySize")
-    List<ProductInfoDTO> searchProductBySize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, List<Integer> sizes, int limit, int offset);
+    List<ProductInfoDTO> searchProductBySize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, List<Integer> sizes, int limit, int offset, String name, String sortingOption);
 
     //Đếm số sản phẩm
     @Query(nativeQuery = true, value = "SELECT COUNT(DISTINCT d.id) " +
@@ -90,25 +91,25 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "FROM product " +
             "INNER JOIN product_category " +
             "ON product.id = product_category.product_id " +
-            "WHERE product.status = 1 AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
+            "WHERE product.status = 1 AND product.name LIKE CONCAT('%',?6,'%') AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
             "AND product.sale_price BETWEEN ?3 AND ?4) as d " +
             "INNER JOIN product_size " +
             "ON product_size.product_id = d.id " +
             "WHERE product_size.size IN (?5)")
-    int countProductBySize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, List<Integer> sizes);
+    int countProductBySize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, List<Integer> sizes, String name);
 
     //Tìm kiến sản phẩm k theo size
     @Query(nativeQuery = true, name = "searchProductAllSize")
-    List<ProductInfoDTO> searchProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, int limit, int offset);
+    List<ProductInfoDTO> searchProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, int limit, int offset, String name, String sortingOption);
 
     //Đếm số sản phẩm
     @Query(nativeQuery = true, value = "SELECT COUNT(DISTINCT product.id) " +
             "FROM product " +
             "INNER JOIN product_category " +
             "ON product.id = product_category.product_id " +
-            "WHERE product.status = 1 AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
+            "WHERE product.status = 1 AND product.name LIKE CONCAT('%',?5,'%') AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
             "AND product.sale_price BETWEEN ?3 AND ?4 ")
-    int countProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice);
+    int countProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, String name);
 
     //Tìm kiến sản phẩm theo tên và tên danh mục
     @Query(nativeQuery = true, name = "searchProductByKeyword")

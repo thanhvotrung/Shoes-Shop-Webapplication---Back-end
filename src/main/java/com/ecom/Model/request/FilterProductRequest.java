@@ -11,6 +11,10 @@ import java.util.List;
 @Setter
 @ToString
 public class FilterProductRequest {
+
+
+    private String name;
+
     private List<Long> brands;
 
     private List<Long> categories;
@@ -24,4 +28,7 @@ public class FilterProductRequest {
     private Long maxPrice;
 
     private int page;
+
+    @JsonProperty("sorting_option")
+    private String sortingOption;
 }

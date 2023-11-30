@@ -91,8 +91,6 @@ public class OrdersService {
             if (product.getQuantity() > productSize.getQuantity()) {
                 throw new BadRequestException("Số lượng giày " + productOptional.get().getName() + " không đủ, vui lòng chọn size hoặc sản phẩm khác!");
             }
-            System.out.println(product.getProductPrice());
-            System.out.println(productOptional.get().getSalePrice());
             //Kiểm tra giá sản phẩm
             if (productOptional.get().getSalePrice() != product.getProductPrice()) {
                 throw new BadRequestException("Giá sản phẩm " + productOptional.get().getName() + " thay đổi, Vui lòng đặt hàng lại!");
@@ -207,92 +205,100 @@ public class OrdersService {
         }
     }
 
-    public void updateStatusOrder(UpdateStatusOrderRequest updateStatusOrderRequest, long orderId, long userId) {
+    public Orders findOrdersById(long id) {
+        Optional<Orders> orders = ordersRepository.findById(id);
+        if (orders.isEmpty()) {
+            throw new NotFoundException("Đơn hàng không tồn tại");
+        }
+        return orders.get();
+    }
+
+    public void updateInfoOrder(UpdateStatusOrderRequest updateStatusOrderRequest, long orderId, long userId) {
         Optional<Orders> rs = ordersRepository.findById(orderId);
         if (rs.isEmpty()) {
             throw new NotFoundException("Đơn hàng không tồn tại");
         }
         Orders order = rs.get();
-        List<OrderDetails> orderDetails = ordersDetailsRepository.findAllByOrdersId(orderId);
+//        List<OrderDetails> orderDetails = ordersDetailsRepository.findAllByOrdersId(orderId);
 
         //Kiểm tra trạng thái của đơn hàng
-        boolean check = false;
-        for (Integer status : LIST_ORDER_STATUS) {
-            if (status == updateStatusOrderRequest.getStatus()) {
-                check = true;
-                break;
-            }
-        }
-        if (!check) {
-            throw new BadRequestException("Trạng thái đơn hàng không hợp lệ");
-        }
-        //Cập nhật trạng thái đơn hàng
-        if (order.getStatus() == ORDER_STATUS) {
-            //Đơn hàng ở trạng thái chờ lấy hàng
-            if (updateStatusOrderRequest.getStatus() == ORDER_STATUS) {
-                order.setReceiverPhone(updateStatusOrderRequest.getReceiverPhone());
-                order.setReceiverName(updateStatusOrderRequest.getReceiverName());
-                order.setReceiverAddress(updateStatusOrderRequest.getReceiverAddress());
-                //Đơn hàng ở trạng thái đang vận chuyển
-            } else if (updateStatusOrderRequest.getStatus() == DELIVERY_STATUS) {
-                //Trừ đi một sản phẩm
-//                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
-                //Đơn hàng ở trạng thái đã giao hàng
-            } else if (updateStatusOrderRequest.getStatus() == COMPLETED_STATUS) {
-                for (OrderDetails details : orderDetails) {
-                    //Trừ đi một sản phẩm và cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
-//                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
-                    productRepository.plusOneProductTotalSold(details.getProduct().getId());
-//                    statistic(order.getTotalPrice(), details.getQuantity(), order);
-                }
-            } else if (updateStatusOrderRequest.getStatus() != CANCELED_STATUS) {
-                throw new BadRequestException("Không thế chuyển sang trạng thái này");
-            }
-            //Đơn hàng ở trạng thái đang giao hàng
-        } else if (order.getStatus() == DELIVERY_STATUS) {
-            //Đơn hàng ở trạng thái đã giao hàng
-            if (updateStatusOrderRequest.getStatus() == COMPLETED_STATUS) {
-                for (OrderDetails details : orderDetails) {
-                    //Cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
-//                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
-                    productRepository.plusOneProductTotalSold(details.getProduct().getId());
-//                    statistic(order.getTotalPrice(), details.getQuantity(), order);
-                }
-                //Đơn hàng ở trạng thái đã hủy
-            } else if (updateStatusOrderRequest.getStatus() == RETURNED_STATUS) {
-                for (OrderDetails details : orderDetails) {
-                    //Cộng lại một sản phẩm đã bị trừ
-                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
-                    //Đơn hàng ở trạng thái đã trả hàng
-                }
-            } else if (updateStatusOrderRequest.getStatus() == CANCELED_STATUS) {
-                for (OrderDetails details : orderDetails) {
-                    //Cộng lại một sản phẩm đã bị trừ
-                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
-                }
-
-            } else if (updateStatusOrderRequest.getStatus() != DELIVERY_STATUS) {
-                throw new BadRequestException("Không thế chuyển sang trạng thái này");
-            }
-            //Đơn hàng ở trạng thái đã giao hàng
-        } else if (order.getStatus() == COMPLETED_STATUS) {
-            //Đơn hàng đang ở trạng thái đã hủy
-            if (updateStatusOrderRequest.getStatus() == RETURNED_STATUS) {
-                for (OrderDetails details : orderDetails) {
-                    //Cộng một sản phẩm đã bị trừ và trừ đi một sản phẩm đã bán và trừ số tiền
-                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
-                    productRepository.minusOneProductTotalSold(details.getProduct().getId());
-//                    updateStatistic(order.getTotalPrice(), details.getQuantity(), order);
-                }
-
-            } else if (updateStatusOrderRequest.getStatus() != COMPLETED_STATUS) {
-                throw new BadRequestException("Không thế chuyển sang trạng thái này");
-            }
-        } else {
-            if (order.getStatus() != updateStatusOrderRequest.getStatus()) {
-                throw new BadRequestException("Không thế chuyển đơn hàng sang trạng thái này");
-            }
-        }
+//        boolean check = false;
+//        for (Integer status : LIST_ORDER_STATUS) {
+//            if (status == updateStatusOrderRequest.getStatus()) {
+//                check = true;
+//                break;
+//            }
+//        }
+//        if (!check) {
+//            throw new BadRequestException("Trạng thái đơn hàng không hợp lệ");
+//        }
+//        //Cập nhật trạng thái đơn hàng
+//        if (order.getStatus() == ORDER_STATUS) {
+//            //Đơn hàng ở trạng thái chờ lấy hàng
+//            if (updateStatusOrderRequest.getStatus() == ORDER_STATUS) {
+//                order.setReceiverPhone(updateStatusOrderRequest.getReceiverPhone());
+//                order.setReceiverName(updateStatusOrderRequest.getReceiverName());
+//                order.setReceiverAddress(updateStatusOrderRequest.getReceiverAddress());
+//                //Đơn hàng ở trạng thái đang vận chuyển
+//            } else if (updateStatusOrderRequest.getStatus() == DELIVERY_STATUS) {
+//                //Trừ đi một sản phẩm
+////                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
+//                //Đơn hàng ở trạng thái đã giao hàng
+//            } else if (updateStatusOrderRequest.getStatus() == COMPLETED_STATUS) {
+//                for (OrderDetails details : orderDetails) {
+//                    //Trừ đi một sản phẩm và cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
+////                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
+//                    productRepository.plusOneProductTotalSold(details.getProduct().getId());
+////                    statistic(order.getTotalPrice(), details.getQuantity(), order);
+//                }
+//            } else if (updateStatusOrderRequest.getStatus() != CANCELED_STATUS) {
+//                throw new BadRequestException("Không thế chuyển sang trạng thái này");
+//            }
+//            //Đơn hàng ở trạng thái đang giao hàng
+//        } else if (order.getStatus() == DELIVERY_STATUS) {
+//            //Đơn hàng ở trạng thái đã giao hàng
+//            if (updateStatusOrderRequest.getStatus() == COMPLETED_STATUS) {
+//                for (OrderDetails details : orderDetails) {
+//                    //Cộng một sản phẩm vào sản phẩm đã bán và cộng tiền
+////                productSizeRepository.minusOneProductBySize(order.getProduct().getId(), order.getSize());
+//                    productRepository.plusOneProductTotalSold(details.getProduct().getId());
+////                    statistic(order.getTotalPrice(), details.getQuantity(), order);
+//                }
+//                //Đơn hàng ở trạng thái đã hủy
+//            } else if (updateStatusOrderRequest.getStatus() == RETURNED_STATUS) {
+//                for (OrderDetails details : orderDetails) {
+//                    //Cộng lại một sản phẩm đã bị trừ
+//                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
+//                    //Đơn hàng ở trạng thái đã trả hàng
+//                }
+//            } else if (updateStatusOrderRequest.getStatus() == CANCELED_STATUS) {
+//                for (OrderDetails details : orderDetails) {
+//                    //Cộng lại một sản phẩm đã bị trừ
+//                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
+//                }
+//
+//            } else if (updateStatusOrderRequest.getStatus() != DELIVERY_STATUS) {
+//                throw new BadRequestException("Không thế chuyển sang trạng thái này");
+//            }
+//            //Đơn hàng ở trạng thái đã giao hàng
+//        } else if (order.getStatus() == COMPLETED_STATUS) {
+//            //Đơn hàng đang ở trạng thái đã hủy
+//            if (updateStatusOrderRequest.getStatus() == RETURNED_STATUS) {
+//                for (OrderDetails details : orderDetails) {
+//                    //Cộng một sản phẩm đã bị trừ và trừ đi một sản phẩm đã bán và trừ số tiền
+//                    productSizeRepository.plusOneProductBySize(details.getProduct().getId(), details.getSize());
+//                    productRepository.minusOneProductTotalSold(details.getProduct().getId());
+////                    updateStatistic(order.getTotalPrice(), details.getQuantity(), order);
+//                }
+//
+//            } else if (updateStatusOrderRequest.getStatus() != COMPLETED_STATUS) {
+//                throw new BadRequestException("Không thế chuyển sang trạng thái này");
+//            }
+//        } else {
+//            if (order.getStatus() != updateStatusOrderRequest.getStatus()) {
+//                throw new BadRequestException("Không thế chuyển đơn hàng sang trạng thái này");
+//            }
+//        }
 
         User user = new User();
         user.setId(userId);

@@ -123,11 +123,12 @@ import java.util.List;
                 "FROM product " +
                 "INNER JOIN product_category " +
                 "ON product.id = product_category.product_id " +
-                "WHERE product.status = 1 AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
-                "AND product.sale_price BETWEEN ?3 AND ?4) as d " +
+                "WHERE product.status = 1 AND product.name LIKE CONCAT('%',?8,'%') AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
+                "AND product.sale_price BETWEEN ?3 AND ?4 " +
+                "ORDER BY CASE WHEN ?9 = 'asc' THEN product.sale_price END ASC, CASE WHEN ?9 = 'desc' THEN product.sale_price END DESC) as d " +
                 "INNER JOIN product_size " +
                 "ON product_size.product_id = d.id " +
-                "WHERE product_size.size IN (?5) " +
+                "WHERE product_size.size IN (?5) AND product_size.quantity > 0 " +
                 "LIMIT ?6 "+
                 "OFFSET ?7"
 )
@@ -138,8 +139,9 @@ import java.util.List;
                 "FROM product " +
                 "INNER JOIN product_category " +
                 "ON product.id = product_category.product_id " +
-                "WHERE product.status = 1 AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
+                "WHERE product.status = 1 AND product.name LIKE CONCAT('%',?7,'%') AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
                 "AND product.sale_price BETWEEN ?3 AND ?4 " +
+                "ORDER BY CASE WHEN ?8 = 'asc' THEN product.sale_price END ASC, CASE WHEN ?8 = 'desc' THEN product.sale_price END DESC " + // Add this line for sorting+
                 "LIMIT ?5 " +
                 "OFFSET ?6"
 )

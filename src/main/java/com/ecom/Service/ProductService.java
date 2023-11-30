@@ -323,12 +323,12 @@ public class ProductService {
 
         if (req.getSizes().isEmpty()) {
             //Nếu không có size
-            products = productRepository.searchProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset());
-            totalItems = productRepository.countProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice());
+            products = productRepository.searchProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset(), req.getName(), req.getSortingOption());
+            totalItems = productRepository.countProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), req.getName());
         } else {
             //Nếu có size
-            products = productRepository.searchProductBySize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), req.getSizes(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset());
-            totalItems = productRepository.countProductBySize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), req.getSizes());
+            products = productRepository.searchProductBySize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), req.getSizes(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset(), req.getName(), req.getSortingOption());
+            totalItems = productRepository.countProductBySize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), req.getSizes(), req.getName());
         }
 
         //Tính tổng số trang
@@ -337,6 +337,8 @@ public class ProductService {
         return new PageableDTO(checkPublicPromotion(products), totalItems, totalPages, req.getPage());
 
     }
+
+
 
     public PageableDTO searchProductByKeyword(String keyword, Integer page) {
         // Validate
