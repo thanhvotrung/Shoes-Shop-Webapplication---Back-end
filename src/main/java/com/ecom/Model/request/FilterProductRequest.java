@@ -11,6 +11,8 @@ import java.util.List;
 @Setter
 @ToString
 public class FilterProductRequest {
+
+
     private List<Long> brands;
 
     private List<Long> categories;
@@ -24,4 +26,5 @@ public class FilterProductRequest {
     private Long maxPrice;
 
     private int page;
+
 }

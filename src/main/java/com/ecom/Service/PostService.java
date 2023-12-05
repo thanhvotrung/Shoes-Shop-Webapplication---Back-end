@@ -134,6 +134,14 @@ public class PostService {
         return post.get();
     }
 
+//    public Post getPostByTitle(String title) {
+//        Optional<Post> post = postRepository.findByTitle(title);
+//        if (post.isEmpty()) {
+//            throw new NotFoundException("Bài viết không tồn tại");
+//        }
+//        return post.get();
+//    }
+
     public Page<Post> adminGetListPosts(String title, String status, Integer page) {
         page--;
         if (page < 0) {

@@ -99,7 +99,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     //Tìm kiến sản phẩm k theo size
     @Query(nativeQuery = true, name = "searchProductAllSize")
-    List<ProductInfoDTO> searchProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice, int limit, int offset);
+    List<ProductInfoDTO> searchProductAllSize( List<Long> brands, List<Long> categories, long minPrice, long maxPrice, int limit, int offset);
 
     //Đếm số sản phẩm
     @Query(nativeQuery = true, value = "SELECT COUNT(DISTINCT product.id) " +
@@ -108,7 +108,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "ON product.id = product_category.product_id " +
             "WHERE product.status = 1 AND product.brand_id IN (?1) AND product_category.category_id IN (?2) " +
             "AND product.sale_price BETWEEN ?3 AND ?4 ")
-    int countProductAllSize(List<Long> brands, List<Long> categories, long minPrice, long maxPrice);
+    int countProductAllSize( List<Long> brands, List<Long> categories, long minPrice, long maxPrice);
 
     //Tìm kiến sản phẩm theo tên và tên danh mục
     @Query(nativeQuery = true, name = "searchProductByKeyword")

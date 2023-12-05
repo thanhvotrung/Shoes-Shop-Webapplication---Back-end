@@ -162,7 +162,6 @@ public class ProductService {
         try {
             // Delete product size
             productSizeRepository.deleteByProductId(id);
-
             productRepository.deleteById(id);
         } catch (Exception ex) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -322,8 +321,9 @@ public class ProductService {
         List<ProductInfoDTO> products;
 
         if (req.getSizes().isEmpty()) {
+
             //Nếu không có size
-            products = productRepository.searchProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset());
+            products = productRepository.searchProductAllSize( req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice(), LIMIT_PRODUCT_SHOP, pageUtil.calculateOffset());
             totalItems = productRepository.countProductAllSize(req.getBrands(), req.getCategories(), req.getMinPrice(), req.getMaxPrice());
         } else {
             //Nếu có size
@@ -361,6 +361,32 @@ public class ProductService {
         return new PageableDTO(checkPublicPromotion(products), totalItems, totalPages, page);
     }
 
+    public PageableDTO findProductbyName(Optional<String> key,Optional<Integer> page){
+        if(key.isEmpty()){
+            PageUtil pageInfo = new PageUtil(LIMIT_PRODUCT_SEARCH, page.get());
+            //Lấy danh sách sản phẩm theo key
+            List<ProductInfoDTO> products = productRepository.searchProductByKeyword(key.get(), LIMIT_PRODUCT_SEARCH, pageInfo.calculateOffset());
+
+            //Lấy số sản phẩm theo key
+            int totalItems = productRepository.countProductByKeyword(key.get());
+
+            //Tính số trang
+            int totalPages = pageInfo.calculateTotalPage(totalItems);
+            return new PageableDTO(checkPublicPromotion(products), totalItems, totalPages, page.get());
+        }else{
+            PageUtil pageInfo = new PageUtil(LIMIT_PRODUCT_SEARCH, page.get());
+            //Lấy danh sách sản phẩm theo key
+            List<ProductInfoDTO> products = productRepository.searchProductByKeyword(key.get(), LIMIT_PRODUCT_SEARCH, pageInfo.calculateOffset());
+
+            //Lấy số sản phẩm theo key
+            int totalItems = productRepository.countProductByKeyword(key.get());
+
+            //Tính số trang
+            int totalPages = pageInfo.calculateTotalPage(totalItems);
+            return new PageableDTO(checkPublicPromotion(products), totalItems, totalPages, page.get());
+        }
+    }
+
     public Promotion checkPromotion(String code) {
         return promotionRepository.checkPromotion(code);
     }
@@ -388,4 +414,7 @@ public class ProductService {
     public List<Product> getAllProduct() {
         return productRepository.findAll();
     }
+
+
+
 }

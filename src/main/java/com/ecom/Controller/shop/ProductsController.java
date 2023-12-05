@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -26,59 +27,58 @@ public class ProductsController {
     @Autowired
     private CategoryService categoryService;
 
-//    @GetMapping("/api/client/products")
-//    public ResponseEntity<Object> getProductShopPages(
-//            @RequestParam(name = "brands_filter", required = false, defaultValue = "") List<Long> brandsFilter,
-//            @RequestParam(name = "categories_filter", required = false, defaultValue = "") List<Long> categoriesFilter,
-//            @RequestParam(name = "sizes_filter", required = false, defaultValue = "") List<Integer> sizesFilter,
-//            @RequestParam(name = "min_price", required = false, defaultValue = "") Long min,
-//            @RequestParam(name = "max_price", required = false, defaultValue = "") Long max,
-//            @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
-//
-//        List<Long> brandIds = new ArrayList<>();
-//        List<Long> categoryIds = new ArrayList<>();
-//        List<Integer> sizes = new ArrayList<>();
-//        Long minPrice = (long) 0;
-//        Long maxPrice = Long.MAX_VALUE;
-//
-//
-//        //Lấy danh sách nhãn hiệu
-//        if (brandsFilter.size() > 0) {
-//            for (Long brandId : brandsFilter) {
-//                System.out.println(brandId);
-//                brandIds.add(brandId);
-//            }
-//        } else {
-//            List<Brand> brands = brandService.getListBrand();
-//            for (Brand brand : brands) {
-//                brandIds.add(brand.getId());
-//            }
-//        }
-//
-//        //Lấy danh sách danh mục
-//        if (categoriesFilter.size() > 0) {
-//            for (Long categoryId : categoriesFilter) {
-//                categoryIds.add(categoryId);
-//            }
-//        } else {
-//            List<Category> categories = categoryService.getListCategories();
-//            for (Category category : categories) {
-//                categoryIds.add(category.getId());
-//            }
-//        }
-//
-//        if (sizesFilter.size() > 0) {
-//            for (Integer size : sizesFilter) {
-//                sizes.add(size);
-//            }
-//        }
-//
-//        //Lấy danh sách sản phẩm
-//        FilterProductRequest req = new FilterProductRequest(brandIds, categoryIds, sizes, minPrice, maxPrice, page);
-//        PageableDTO result = productService.filterProduct(req);
-//
-//        return ResponseEntity.ok(result);
-//    }
+    @GetMapping("/api/client/products")
+    public ResponseEntity<Object> getProductShopPages(
+            @RequestParam(name = "brands_filter", required = false, defaultValue = "") List<Long> brandsFilter,
+            @RequestParam(name = "categories_filter", required = false, defaultValue = "") List<Long> categoriesFilter,
+            @RequestParam(name = "sizes_filter", required = false, defaultValue = "") List<Integer> sizesFilter,
+            @RequestParam(name = "min_price", required = false, defaultValue = "") Long min,
+            @RequestParam(name = "max_price", required = false, defaultValue = "") Long max,
+            @RequestParam(name = "page", required = false, defaultValue = "1") int page) {
+
+        List<Long> brandIds = new ArrayList<>();
+        List<Long> categoryIds = new ArrayList<>();
+        List<Integer> sizes = new ArrayList<>();
+        Long minPrice = (long) 0;
+        Long maxPrice = Long.MAX_VALUE;
+
+        //Lấy danh sách nhãn hiệu
+        if (brandsFilter.size() > 0) {
+            for (Long brandId : brandsFilter) {
+                System.out.println(brandId);
+                brandIds.add(brandId);
+            }
+        } else {
+            List<Brand> brands = brandService.getListBrand();
+            for (Brand brand : brands) {
+                brandIds.add(brand.getId());
+            }
+        }
+
+        //Lấy danh sách danh mục
+        if (categoriesFilter.size() > 0) {
+            for (Long categoryId : categoriesFilter) {
+                categoryIds.add(categoryId);
+            }
+        } else {
+            List<Category> categories = categoryService.getListCategories();
+            for (Category category : categories) {
+                categoryIds.add(category.getId());
+            }
+        }
+
+        if (sizesFilter.size() > 0) {
+            for (Integer size : sizesFilter) {
+                sizes.add(size);
+            }
+        }
+
+        //Lấy danh sách sản phẩm
+        FilterProductRequest req = new FilterProductRequest(brandIds, categoryIds, sizes, minPrice, maxPrice, page);
+        PageableDTO result = productService.filterProduct(req);
+
+        return ResponseEntity.ok(result);
+    }
 
     @PostMapping("/api/client/products")
     public ResponseEntity<Object> getProductShopPages(@RequestBody(required = false) FilterProductRequest fil) {
@@ -88,7 +88,7 @@ public class ProductsController {
         List<Integer> sizes = new ArrayList<>();
         Long minPrice = (long) 0;
         Long maxPrice = Long.MAX_VALUE;
-        int page = 1;
+        int page = 3;
         if(Objects.isNull(fil)){
             List<Brand> brands = brandService.getListBrand();
             for (Brand brand : brands) {
@@ -156,6 +156,11 @@ public class ProductsController {
     @GetMapping("/api/client/search")
     public ResponseEntity<Object> searchProduct(@RequestParam(required = false) String keyword, @RequestParam(required = false) Integer page) {
         PageableDTO result = productService.searchProductByKeyword(keyword, page);
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/api/client/find")
+    public ResponseEntity<Object> findProduct(@RequestParam("keywords") Optional<String> keyword, @RequestParam("page")Optional<Integer> page) {
+        PageableDTO result = productService.findProductbyName(keyword, page);
         return ResponseEntity.ok(result);
     }
 }

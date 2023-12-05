@@ -1,9 +1,6 @@
 package com.ecom.Model.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -13,6 +10,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString
 public class CreatePostRequest {
     @NotNull(message = "Tiêu đề rỗng")
     @NotEmpty(message = "Tiêu đề rỗng")
@@ -28,4 +26,5 @@ public class CreatePostRequest {
     private int status;
 
     private String image;
+    private String email;
 }
