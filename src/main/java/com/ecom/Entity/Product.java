@@ -161,6 +161,7 @@ import java.util.List;
 @NamedNativeQuery(
         name = "getProductOrders",
         resultSetMapping = "chartProductDTO",
+
         query = "select p.name as label, sum(od.quantity) as value from product p " +
                 "inner join order_details od on p.id = od.product_id " +
                 "inner join orderss o on od.orders_id = o.id " +

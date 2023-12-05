@@ -18,18 +18,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Objects;
 
-import static com.ecom.config.Contant.MAX_AGE_COOKIE;
-
 @RestController
 @CrossOrigin("*")
-public class UserController {
+public class UsersController {
     @Autowired
     private UserService userService;
 

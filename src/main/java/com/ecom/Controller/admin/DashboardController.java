@@ -115,6 +115,7 @@ public class DashboardController {
         return ResponseEntity.ok(sum);
     }
 
+
     @GetMapping("/api/admin/product-order-categories")
     public ResponseEntity<Object> getListProductOrderCategories(){
         List<ChartDTO> chartDTOS = categoryRepository.getListProductOrderCategories();

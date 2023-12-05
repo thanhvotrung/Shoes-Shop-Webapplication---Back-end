@@ -13,7 +13,6 @@ import lombok.Setter;
 public class OrderDetailDTO {
     private long id;
     private long subtotalPrice;
-//    private Orders.UsedPromotion promotion;
     private long totalPrice;
     private String receiverName;
     private String receiverPhone;

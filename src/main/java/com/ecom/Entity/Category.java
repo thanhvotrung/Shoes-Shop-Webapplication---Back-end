@@ -25,6 +25,7 @@ import java.sql.Timestamp;
 @NamedNativeQuery(
         name = "getProductOrderCategories",
         resultSetMapping = "chartCategoryDTO",
+
         query = "select  c.name as label, sum(od.quantity) as value from category c " +
                 "inner join product_category pc on pc.category_id = c.id " +
                 "inner join product p on p.id = pc.product_id " +
