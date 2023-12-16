@@ -18,4 +18,9 @@ public class EmailRestController {
     public ResponseEntity<HttpStatus> sendMail(@RequestBody EmailDetails details) {
         return emailService.sendSimpleMail(details);
     }
+
+    @PostMapping("/sendemailsuccess")
+    public ResponseEntity<HttpStatus> sendMailSuccess(@RequestBody EmailDetails details) {
+        return emailService.sendSimpleMail(details);
+    }
 }

@@ -5,10 +5,12 @@ import com.ecom.Entity.Category;
 import com.ecom.Exception.NotFoundException;
 import com.ecom.Model.dto.DetailProductInfoDTO;
 import com.ecom.Model.dto.PageableDTO;
+import com.ecom.Model.dto.PostDTO;
 import com.ecom.Model.dto.ProductInfoDTO;
 import com.ecom.Model.request.FilterProductRequest;
 import com.ecom.Service.BrandService;
 import com.ecom.Service.CategoryService;
+import com.ecom.Service.PostService;
 import com.ecom.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,10 @@ import java.util.List;
 public class HomeController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private PostService postService;
+
     @Autowired
     private BrandService brandService;
     @Autowired
@@ -46,7 +52,7 @@ public class HomeController {
         return ResponseEntity.ok(bestSellerProducts);
     }
 
-    @GetMapping("/api/{slug}/{id}")
+    @GetMapping("/api/product/{slug}/{id}")
     public ResponseEntity<Object> getProductDetail(@PathVariable String id) {
         DetailProductInfoDTO product = productService.getDetailProductById(id);
         if (product != null) {
@@ -55,6 +61,7 @@ public class HomeController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping("/api/{id}")
     public ResponseEntity<Object> getProductDetail2(@PathVariable String id) {

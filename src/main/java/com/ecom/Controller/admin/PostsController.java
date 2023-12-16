@@ -2,6 +2,8 @@ package com.ecom.Controller.admin;
 
 import com.ecom.Entity.Post;
 import com.ecom.Entity.User;
+
+import com.ecom.Model.dto.PostDTO;
 import com.ecom.Model.request.CreatePostRequest;
 import com.ecom.Service.ImageService;
 import com.ecom.Service.PostService;
@@ -69,5 +71,16 @@ public class PostsController {
     public ResponseEntity<Object> deletePost(@PathVariable int id) {
         postService.deletePost(id);
         return ResponseEntity.ok("Xóa thành công");
+    }
+
+
+    @GetMapping("/api/news/{slug}/{id}")
+    public ResponseEntity<Object> getPostDetail(@PathVariable long id) {
+        Post post = postService.getPostById(id);
+        if (post != null) {
+            return ResponseEntity.ok(post);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
 }
