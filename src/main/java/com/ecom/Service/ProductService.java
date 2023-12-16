@@ -149,12 +149,14 @@ public class ProductService {
     public void deleteProductById(String id) {
         // Check product exist
         Optional<Product> rs = productRepository.findById(id);
+        System.out.println(id);
         if (rs.isEmpty()) {
             throw new NotFoundException("Sản phẩm không tồn tại");
         }
 
         // If have order, can't delete
         int countOrder = orderDetailsRepository.countByProductIds(id);
+        System.out.println("count: "+countOrder);
         if (countOrder > 0) {
             throw new BadRequestException("Sản phẩm đã được đặt hàng không thể xóa");
         }
