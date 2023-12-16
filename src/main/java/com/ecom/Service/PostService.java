@@ -44,7 +44,6 @@ public class PostService {
 
     public Post createPost(CreatePostRequest createPostRequest, User user) {
         Post post = new Post();
-
         post.setTitle(createPostRequest.getTitle());
         post.setContent(createPostRequest.getContent());
         Slugify slg = new Slugify();
