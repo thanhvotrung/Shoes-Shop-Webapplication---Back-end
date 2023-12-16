@@ -52,7 +52,7 @@ public class HomeController {
         return ResponseEntity.ok(bestSellerProducts);
     }
 
-    @GetMapping("/api/product/{slug}/{id}")
+    @GetMapping("/api/{slug}/{id}")
     public ResponseEntity<Object> getProductDetail(@PathVariable String id) {
         DetailProductInfoDTO product = productService.getDetailProductById(id);
         if (product != null) {
