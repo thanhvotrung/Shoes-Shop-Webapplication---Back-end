@@ -18,10 +18,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
+
+
 
 @RestController
 @CrossOrigin("*")
@@ -55,7 +57,7 @@ public class UsersController {
     }
 
     @PostMapping("/api/register")
-    public ResponseEntity<Object> register(@Valid @RequestBody CreateUserRequest createUserRequest, HttpServletResponse response) {
+    public ResponseEntity<Object> register(@Valid @RequestBody CreateUserRequest createUserRequest) {
         //Create user
         User user = userService.createUser(createUserRequest);
 
@@ -73,7 +75,7 @@ public class UsersController {
     }
 
     @PostMapping("/api/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest loginRequest) {
         //Authenticate
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -128,4 +130,26 @@ public class UsersController {
 
         return ResponseEntity.ok("Cập nhật thành công");
     }
+
+//    @PostMapping("/api/test/login")
+//    public ResponseEntity<Object> loginTest(@Valid @RequestBody LoginRequest loginRequest) {
+//        //Authenticate
+//        try {
+//            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+//                    loginRequest.getEmail(),
+//                    loginRequest.getPassword()
+//            ));
+//            //Gen token
+//            String token = jwtTokenUtil.generateToken((CustomUserDetails) authentication.getPrincipal());
+//
+//
+//
+////            return ResponseEntity.ok(UserMapper.toUserDTO(((CustomUserDetails) authentication.getPrincipal()).getUser()));
+//            return ResponseEntity.ok(token);
+//        } catch (Exception ex) {
+//            throw new BadRequestException("Email hoặc mật khẩu không chính xác!");
+//
+//        }
+//    }
+
 }
