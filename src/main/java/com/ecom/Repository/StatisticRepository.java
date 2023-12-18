@@ -17,6 +17,9 @@ public interface StatisticRepository extends JpaRepository<Statistic, Long> {
     @Query(name = "getStatisticDayByDay",nativeQuery = true)
     List<StatisticDTO> getStatisticDayByDay(String toDate, String formDate);
 
+    @Query(name = "getStatisticMonth",nativeQuery = true)
+    List<StatisticDTO> getStatisticMonth(String toDate, String formDate);
+
     @Query(value = "SELECT sum(sales) as sum FROM statistic" ,nativeQuery = true)
     Long getTotalSales();
 

@@ -97,6 +97,12 @@ public class DashboardController {
         return ResponseEntity.ok(statisticDTOS);
     }
 
+    @PostMapping("/api/admin/statistics/month")
+    public ResponseEntity<Object> getStatisticMonth(@RequestBody FilterDayByDay filterDayByDay){
+        List<StatisticDTO> statisticDTOS = statisticRepository.getStatisticMonth(filterDayByDay.getToDate(),filterDayByDay.getFromDate());
+        return ResponseEntity.ok(statisticDTOS);
+    }
+
     @GetMapping("/api/admin/statistics/total-sales")
     public ResponseEntity<Long> getTotalSales(){
         Long sum = statisticRepository.getTotalSales();

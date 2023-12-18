@@ -16,10 +16,10 @@ import java.sql.Timestamp;
                         classes = @ConstructorResult(
                                 targetClass = StatisticDTO.class,
                                 columns = {
-                                        @ColumnResult(name = "sales",type = Long.class),
-                                        @ColumnResult(name = "profit",type = Long.class),
-                                        @ColumnResult(name = "quantity",type = Integer.class),
-                                        @ColumnResult(name = "createdAt",type = String.class)
+                                        @ColumnResult(name = "sales", type = Long.class),
+                                        @ColumnResult(name = "profit", type = Long.class),
+                                        @ColumnResult(name = "quantity", type = Integer.class),
+                                        @ColumnResult(name = "createdAt", type = String.class)
                                 }
                         )
                 )
@@ -34,7 +34,12 @@ import java.sql.Timestamp;
 @NamedNativeQuery(
         name = "getStatisticDayByDay",
         resultSetMapping = "statisticDTO",
-        query = "SELECT s.sales, s.profit, s.quantity, date_format(s.created_at,'%Y-%m-%d') as createdAt FROM statistic s WHERE date_format(s.created_at,'%Y-%m-%d') >=?1 AND date_format(s.created_at,'%Y-%m-%d') <=?2 ORDER BY createdAt ASC "
+        query = "SELECT s.sales, s.profit, s.quantity, date_format(s.created_at,'%Y-%m-%d') as createdAt FROM statistic s WHERE date_format(s.created_at,'%Y-%m-%d') BETWEEN ?1 AND ?2 ORDER BY createdAt ASC "
+)
+@NamedNativeQuery(
+        name = "getStatisticMonth",
+        resultSetMapping = "statisticDTO",
+        query = "SELECT SUM(s.sales) AS sales, SUM(s.profit) AS profit, SUM(s.quantity) AS quantity, DATE_FORMAT(s.created_at, '%Y-%m') AS createdAt FROM statistic s WHERE DATE_FORMAT(s.created_at, '%Y-%m') BETWEEN ?1 AND ?2 GROUP BY createdAt ORDER BY createdAt ASC"
 )
 @AllArgsConstructor
 @NoArgsConstructor
