@@ -54,6 +54,14 @@ public class ProductService {
     @Autowired
     private OrderDetailsRepository orderDetailsRepository;
 
+    public Integer checkQuantitySizeProduct(String id, String size) {
+        Optional<Integer> quantity = productSizeRepository.quantitySizeProduct(id, size);
+        if (!quantity.isEmpty()){
+            return quantity.get();
+        }
+        return 0;
+    }
+
 
     public Page<Product> adminGetListProduct(String id, String name, String category, String brand, Integer page) {
         page--;
@@ -156,7 +164,7 @@ public class ProductService {
 
         // If have order, can't delete
         int countOrder = orderDetailsRepository.countByProductIds(id);
-        System.out.println("count: "+countOrder);
+        System.out.println("count: " + countOrder);
         if (countOrder > 0) {
             throw new BadRequestException("Sản phẩm đã được đặt hàng không thể xóa");
         }
@@ -339,7 +347,6 @@ public class ProductService {
         return new PageableDTO(checkPublicPromotion(products), totalItems, totalPages, req.getPage());
 
     }
-
 
 
     public PageableDTO searchProductByKeyword(String keyword, Integer page) {

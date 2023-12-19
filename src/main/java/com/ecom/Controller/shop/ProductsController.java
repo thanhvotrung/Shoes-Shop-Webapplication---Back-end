@@ -25,6 +25,11 @@ public class ProductsController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping("/api/client/check-quantity-product")
+    public ResponseEntity<Integer> getQuantitySizeProduct(@RequestParam(required = true) String id, @RequestParam(required = true) String size){
+            return ResponseEntity.ok(productService.checkQuantitySizeProduct(id, size));
+    }
+
     @PostMapping("/api/client/products")
     public ResponseEntity<Object> getProductShopPages(@RequestBody(required = false) FilterProductRequest fil) {
         String name = "";

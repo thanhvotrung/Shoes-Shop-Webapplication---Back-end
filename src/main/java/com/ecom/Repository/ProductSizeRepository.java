@@ -8,9 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductSizeRepository extends JpaRepository<ProductSize,Long> {
+
+    @Query(nativeQuery = true, value="SELECT ps.quantity  FROM product_size ps where ps.product_id = ?1 and ps.size = ?2")
+    Optional<Integer> quantitySizeProduct(String id, String size);
 
     //Lấy size của sản phẩm
     @Query(nativeQuery = true,value = "SELECT ps.size FROM product_size ps WHERE ps.product_id = ?1 AND ps.quantity > 0")
